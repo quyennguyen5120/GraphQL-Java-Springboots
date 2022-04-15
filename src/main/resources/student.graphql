@@ -1,0 +1,17 @@
+schema {
+    query: Query
+}
+
+type Query {
+    allStudents: [Student]
+    student(id: Int): Student
+    addStudent(id: ID, name: String, address: String): Student
+    updateStudent(id: Int!, name: String, address: String): Student
+    deleteStudent(id: Int!): Boolean
+}
+
+type Student {
+    id: Int,
+    name: String,
+    address: String
+}

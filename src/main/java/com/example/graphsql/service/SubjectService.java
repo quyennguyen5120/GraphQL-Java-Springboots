@@ -1,8 +1,6 @@
 package com.example.graphsql.service;
 
-import com.example.graphsql.entity.Student;
 import com.example.graphsql.entity.Subject;
-import com.example.graphsql.repository.StudentRepository;
 import com.example.graphsql.repository.SubjectRepository;
 import graphql.GraphQL;
 import graphql.schema.DataFetchingEnvironment;
@@ -25,86 +23,70 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class StudentService implements BaseFetcher<Student>{
-    @Autowired
-    StudentRepository studentRepository;
+public class SubjectService implements BaseFetcher<Subject>{
+
+    @Value("classpath:subject.graphql")
+    Resource resource;
+    private GraphQL graphQL;
     @Autowired
     SubjectRepository subjectRepository;
 
-    @Value("classpath:student.graphql")
-    Resource resource;
-
-    private GraphQL graphQL;
-
     @Override
-    public Student get(DataFetchingEnvironment dataFetchingEnvironment) {
-      return null;
+    public Subject get(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
     }
 
     @Override
     public Boolean delete(DataFetchingEnvironment dataFetchingEnvironment) {
         Long id = dataFetchingEnvironment.getArgument("id");
-        Student student = studentRepository.getById(id);
-        if(student != null){
-            studentRepository.delete(student);
+        Subject subject = subjectRepository.getById(id);
+        if(subject != null){
+            subjectRepository.delete(subject);
             return true;
         }
         return false;
     }
 
     @Override
-    public Student findById(DataFetchingEnvironment dataFetchingEnvironment) {
+    public Subject findById(DataFetchingEnvironment dataFetchingEnvironment) {
         Long id = dataFetchingEnvironment.getArgument("id");
-        return studentRepository.findById(id).get();
+        return subjectRepository.findById(id).get();
     }
 
     @Override
-    public Student update(DataFetchingEnvironment dataFetchingEnvironment) {
+    public Subject update(DataFetchingEnvironment dataFetchingEnvironment) {
         Long id = dataFetchingEnvironment.getArgument("id");
-        Long idSubject = dataFetchingEnvironment.getArgument("subject_id");
-        Subject subject = null;
-        if(idSubject != null){
-            subject = subjectRepository.findById(idSubject).get();
-        }
-        Student student = studentRepository.getById(id);
-        student = Student.builder()
+        Subject subject = subjectRepository.getById(id);
+        subject = Subject.builder()
                 .name( dataFetchingEnvironment.getArgument("name"))
-                .address(dataFetchingEnvironment.getArgument("address"))
-                .subject(subject)
                 .build();
-        studentRepository.save(student);
-        return student;
+        subjectRepository.save(subject);
+        return subject;
     }
 
     @Override
-    public Student insert(DataFetchingEnvironment dataFetchingEnvironment) {
-        Long idSubject = dataFetchingEnvironment.getArgument("subject_id");
-        Subject subject = null;
-        if(idSubject != null){
-            subject = subjectRepository.findById(idSubject).get();
-        }
-        Student student = Student.builder()
+    public Subject insert(DataFetchingEnvironment dataFetchingEnvironment) {
+        Subject subject = Subject.builder()
                 .name( dataFetchingEnvironment.getArgument("name"))
-                .address(dataFetchingEnvironment.getArgument("address"))
-                .subject(subject)
                 .build();
-        studentRepository.save(student);
-        return student;
+        subjectRepository.save(subject);
+        return subject;
     }
 
     @Override
-    public List<Student> findAll(DataFetchingEnvironment dataFetchingEnvironment) {
-        return studentRepository.findAll();
+    public List<Subject> findAll(DataFetchingEnvironment dataFetchingEnvironment) {
+        return subjectRepository.findAll();
     }
 
     @Override
-    public Page<Student> findByPage(DataFetchingEnvironment dataFetchingEnvironment) {
+    public Page<Subject> findByPage(DataFetchingEnvironment dataFetchingEnvironment) {
         Integer pageIndex = dataFetchingEnvironment.getArgument("page_index");
         Integer pageSize = dataFetchingEnvironment.getArgument("page_size");
         Pageable page = PageRequest.of(pageIndex,pageSize);
-        Page<Student> pageStudent = studentRepository.findAll(page);
-        return pageStudent;
+        Page<Subject> pageSubject = subjectRepository.findAll(page);
+        return pageSubject;
     }
+
 
     @PostConstruct
     private void loadSchema() throws IOException {
@@ -123,7 +105,7 @@ public class StudentService implements BaseFetcher<Student>{
                         .dataFetcher("insert", this::insert)
                         .dataFetcher("update", this::update)
                         .dataFetcher("findAll", this::findAll)
-                        .dataFetcher("findByPage",this::findByPage)
+                        .dataFetcher("findByPage", this::findByPage)
                 )
                 .build();
     }
@@ -131,6 +113,4 @@ public class StudentService implements BaseFetcher<Student>{
     public GraphQL getGraphQL() {
         return graphQL;
     }
-
-
 }

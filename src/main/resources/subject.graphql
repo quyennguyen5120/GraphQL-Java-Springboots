@@ -1,0 +1,23 @@
+schema {
+    query: Query
+}
+
+type Query {
+    findAll: [Subject]
+    findById(id: Long): Subject
+    insert(name: String): Subject
+    update(id: Long!, name: String): Subject
+    delete(id: Long!): Boolean
+}
+
+type Subject{
+    id: Long,
+    name: String,
+    students: [Student]
+}
+
+type Student{
+    id: Long,
+    name: String,
+    address: String
+}

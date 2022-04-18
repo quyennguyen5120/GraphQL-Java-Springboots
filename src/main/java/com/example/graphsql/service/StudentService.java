@@ -67,11 +67,9 @@ public class StudentService implements BaseFetcher<Student>{
             subject = subjectRepository.findById(idSubject).get();
         }
         Student student = studentRepository.getById(id);
-        student = Student.builder()
-                .name( dataFetchingEnvironment.getArgument("name"))
-                .address(dataFetchingEnvironment.getArgument("address"))
-                .subject(subject)
-                .build();
+        student.setName(dataFetchingEnvironment.getArgument("name"));
+        student.setAddress(dataFetchingEnvironment.getArgument("address"));
+        student.setSubject(subject);
         studentRepository.save(student);
         return student;
     }
@@ -83,11 +81,11 @@ public class StudentService implements BaseFetcher<Student>{
         if(idSubject != null){
             subject = subjectRepository.findById(idSubject).get();
         }
-        Student student = Student.builder()
-                .name( dataFetchingEnvironment.getArgument("name"))
-                .address(dataFetchingEnvironment.getArgument("address"))
-                .subject(subject)
-                .build();
+        Student student = new Student();
+        student.setName(dataFetchingEnvironment.getArgument("name"));
+        student.setAddress(dataFetchingEnvironment.getArgument("address"));
+        student.setSubject(subject);
+
         studentRepository.save(student);
         return student;
     }

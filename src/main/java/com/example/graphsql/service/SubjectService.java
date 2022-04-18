@@ -57,18 +57,15 @@ public class SubjectService implements BaseFetcher<Subject>{
     public Subject update(DataFetchingEnvironment dataFetchingEnvironment) {
         Long id = dataFetchingEnvironment.getArgument("id");
         Subject subject = subjectRepository.getById(id);
-        subject = Subject.builder()
-                .name( dataFetchingEnvironment.getArgument("name"))
-                .build();
+        subject.setName(dataFetchingEnvironment.getArgument("name"));
         subjectRepository.save(subject);
         return subject;
     }
 
     @Override
     public Subject insert(DataFetchingEnvironment dataFetchingEnvironment) {
-        Subject subject = Subject.builder()
-                .name( dataFetchingEnvironment.getArgument("name"))
-                .build();
+        Subject subject = new Subject();
+        subject.setName(dataFetchingEnvironment.getArgument("name"));
         subjectRepository.save(subject);
         return subject;
     }
